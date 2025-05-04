@@ -102,6 +102,6 @@ print("Hello Markdown!")
 4. 使用 Typora 时直接输入符号触发格式
 
 立即开始你的 Markdown 写作之旅吧！🚀
-``` 
+
 
 > 提示：保存为 `.md` 文件后，可通过编辑器预览或使用 [Markdown 转换工具](https://markdown.com.cn/) 生成其他格式文档。
