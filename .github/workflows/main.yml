@@ -1,0 +1,72 @@
+# .github/workflows/deploy.yml (Place this file in the cooku-life/docs repository)
+
+name: Deploy Website on Docs Update # 工作流名称，表明是由 docs 更新触发
+
+# 触发条件：当 docs 仓库的 main 分支有 push 操作时触发
+on:
+  push:
+    branches:
+      - main  # 修改为你 docs 仓库需要触发部署的分支
+
+# 权限设置：如果 npm run deploy 需要向 GitHub 仓库（website 或 docs）推送，可能需要写入权限
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 指定运行环境
+
+    steps:
+      # 第 1 步：检出 'website' 仓库的代码
+      # 这个仓库包含构建和部署逻辑 (npm install, npm run deploy)
+      - name: Checkout Website Repository
+        uses: actions/checkout@v4
+        with:
+          repository: cooku-life/website # 明确指定要检出的 website 仓库
+          path: website # 将 website 仓库代码下载到名为 'website' 的子目录
+          # 如果 'npm run deploy' 需要向 'website' 仓库推送，并且 GITHUB_TOKEN 权限不足，
+          # 你可能需要一个具有 'website' 仓库写权限的 PAT (Personal Access Token)
+          # 将 PAT 存储在 'docs' 仓库的 Secrets 中 (例如 WEBSITE_DEPLOY_PAT)
+          # token: ${{ secrets.WEBSITE_DEPLOY_PAT }}
+          # persist-credentials: false # 与 token 一起使用时通常设置为 false
+
+      # 第 2 步：检出 'docs' 仓库的代码 (即当前仓库)
+      # 将其放到 'website' 仓库检出代码下的 'docs' 目录中
+      - name: Checkout Docs Repository (This Repo)
+        uses: actions/checkout@v4
+        with:
+          path: website/docs # 将当前仓库 (docs) 的代码下载到 website/docs 目录
+
+      # 第 3 步：设置 Node.js 环境
+      # 需要 Node.js 来运行 website 的构建和部署命令
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x' # 指定 website 项目所需的 Node.js 版本
+          cache: 'npm'
+          # 缓存路径应指向 website 目录下的 package-lock.json
+          cache-dependency-path: website/package-lock.json
+
+      # 第 4 步：在 website 目录下安装依赖
+      - name: Install Website Dependencies
+        working-directory: ./website # 指定工作目录为 website 子目录
+        run: npm install
+
+      # --- 新增步骤：配置 Git 用户信息 ---
+      - name: Configure Git User
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+      # --- 结束新增步骤 ---
+      # --- 新增步骤：设置 SSH 密钥 ---
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.9.0 # 使用 Action 配置 SSH Agent
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }} # 引用你存储的私钥 Secret
+
+
+      # 第 5 步：在 website 目录下执行部署脚本
+      - name: Run Deploy Script
+        working-directory: ./website # 指定工作目录为 website 子目录
+        
+        run: npm run deploy
