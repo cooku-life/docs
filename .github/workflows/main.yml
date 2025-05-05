@@ -58,6 +58,12 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
       # --- 结束新增步骤 ---
+      # --- 新增步骤：设置 SSH 密钥 ---
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.9.0 # 使用 Action 配置 SSH Agent
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }} # 引用你存储的私钥 Secret
+
 
       # 第 5 步：在 website 目录下执行部署脚本
       - name: Run Deploy Script
