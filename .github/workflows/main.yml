@@ -56,9 +56,3 @@ jobs:
       - name: Run Deploy Script
         working-directory: ./website # 指定工作目录为 website 子目录
         run: npm run deploy
-        env:
-          # 如果 deploy 脚本需要环境变量 (例如 API 密钥或 Token)
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 默认提供的 GITHUB_TOKEN，其上下文是 docs 仓库
-          # DEPLOY_KEY: ${{ secrets.YOUR_SECRET_NAME }} # 用于其他服务的部署密钥，需在 docs 仓库 Secrets 中设置
-          # 如果需要推送到 'website' 仓库且 GITHUB_TOKEN 权限不足，确保 deploy 脚本
-          # 配置为使用上面提到的 PAT (例如通过环境变量传递)
