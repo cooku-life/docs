@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: website/docs # 将当前仓库 (docs) 的代码下载到 website/docs 目录
+          fetch-depth: 0
 
       # 第 3 步：设置 Node.js 环境
       # 需要 Node.js 来运行 website 的构建和部署命令
