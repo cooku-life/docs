@@ -18,9 +18,13 @@ Markdown 是一种轻量级标记语言，通过简单的符号即可快速排�
 
 ### 安装步骤（以 VS Code 为例）
 1. 访问 [code.visualstudio.com](https://code.visualstudio.com/) 下载安装
+
 ![](https://cdn.seimo.cn/20250504184241.png)
+
 2. 扩展商店搜索安装 "Markdown All in One"
+
 ![](https://cdn.seimo.cn/20250504184512.png)
+
 3. 新建 `.md` 文件开始编写
 > 如果无法创建文件，请在 Visual Studio Code 上方找到File(文件)，点击 Open Folder(打开文件夹)，选择一个空文件夹，然后新建一个文件，命名为 `demo.md`，即可开始编写。
 
